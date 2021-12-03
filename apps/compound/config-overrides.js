@@ -1,6 +1,4 @@
 /* config-overrides.js */
-const path = require("path");
-const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 
 module.exports = {
   // The function to use to create a webpack dev server configuration when running the development
