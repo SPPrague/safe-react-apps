@@ -1,5 +1,6 @@
 import { ThemeProvider } from 'styled-components';
 import { render } from '@testing-library/react';
+import { FEATURES, GAS_PRICE_TYPE, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk';
 
 export const mockTheme = {
   buttons: {
@@ -142,6 +143,55 @@ export const mockInitialBalances = [
     fiatConversion: '3782.786514637171',
   },
 ];
+
+export const mockChainInfo = {
+  transactionService: 'https://safe-transaction.rinkeby.staging.gnosisdev.com',
+  chainName: 'Rinkeby',
+  chainId: '4',
+  shortName: 'rin',
+  description: 'description',
+  l2: false,
+  nativeCurrency: {
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+    logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/4/currency_logo.png',
+  },
+  safeAppsRpcUri: {
+    authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+    value: 'https://api.url/rpc',
+  },
+  publicRpcUri: {
+    authentication: RPC_AUTHENTICATION.API_KEY_PATH,
+    value: 'https://rinkeby.infura.io/v3/',
+  },
+  blockExplorerUriTemplate: {
+    address: 'https://rinkeby.etherscan.io/address/{{address}}',
+    txHash: 'https://rinkeby.etherscan.io/tx/{{txHash}}',
+    api: 'https://api-rinkeby.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
+  },
+  theme: {
+    textColor: '#ffffff',
+    backgroundColor: '#E8673C',
+  },
+  ensRegistryAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  gasPrice: [
+    {
+      type: GAS_PRICE_TYPE.ORACLE,
+      uri: 'https://api-rinkeby.etherscan.io/api?module=gastracker&action=gasoracle',
+      gasParameter: 'FastGasPrice',
+      gweiFactor: '1000000000.000000000',
+    },
+  ],
+  disabledWallets: ['fortmatic', 'lattice'],
+  features: [
+    FEATURES.CONTRACT_INTERACTION,
+    FEATURES.DOMAIN_LOOKUP,
+    FEATURES.ERC721,
+    FEATURES.SAFE_APPS,
+    FEATURES.SPENDING_LIMIT,
+  ],
+};
 
 export function renderWithProviders(ui: JSX.Element) {
   return {

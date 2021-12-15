@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import SafeAppsSDK, { ChainInfo } from '@gnosis.pm/safe-apps-sdk';
 import { useSafeAppsSDK } from '@gnosis.pm/safe-apps-react-sdk';
+import { RpcUri, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk';
 
 import InterfaceRepository from './interfaceRepository';
 import { InterfaceRepo } from './interfaceRepository';
-import { CHAINS, rpcUrlGetterByNetwork } from '../../utils';
 
 export interface Services {
   sdk: SafeAppsSDK;
@@ -25,11 +25,11 @@ export default function useServices(): Services {
       return;
     }
 
-    const rpcUrlGetter = rpcUrlGetterByNetwork[chainInfo.chainId as CHAINS];
-    if (!rpcUrlGetter) {
+    const rpcUrl = formatRpcServiceUrl(chainInfo.safeAppsRpcUri);
+
+    if (!rpcUrl) {
       throw Error(`RPC URL not defined for chain id ${chainInfo.chainId}`);
     }
-    const rpcUrl = rpcUrlGetter(process.env.REACT_APP_RPC_TOKEN);
 
     const web3Instance = new Web3(rpcUrl);
     const interfaceRepo = new InterfaceRepository(chainInfo, web3Instance);
@@ -58,3 +58,11 @@ export default function useServices(): Services {
     interfaceRepo,
   };
 }
+
+const RPC_TOKEN = process.env.REACT_APP_RPC_TOKEN;
+
+const formatRpcServiceUrl = ({ authentication, value }: RpcUri): string => {
+  const isAuthenticatedRpc = authentication === RPC_AUTHENTICATION.API_KEY_PATH;
+  const safeAppsRpcUri = isAuthenticatedRpc && RPC_TOKEN ? `${value}${RPC_TOKEN}` : value;
+  return safeAppsRpcUri;
+};

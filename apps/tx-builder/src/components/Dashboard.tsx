@@ -52,7 +52,6 @@ const StyledAddressInput = styled(AddressInput)`
 
 const Dashboard = (): ReactElement => {
   const { web3, interfaceRepo, chainInfo } = useServices();
-  const services = useServices();
   const { transactions, handleAddTransaction, handleRemoveTransaction, handleSubmitTransactions } = useTransactions();
   const [addressOrAbi, setAddressOrAbi] = useState('');
   const [isABILoading, setIsABILoading] = useState(false);
@@ -84,9 +83,12 @@ const Dashboard = (): ReactElement => {
     loadContract(addressOrAbi);
   }, [addressOrAbi, interfaceRepo, web3]);
 
-  const getAddressFromDomain = (name: string): Promise<string> => {
-    return services?.web3?.eth.ens.getAddress(name) || new Promise((resolve) => resolve(name));
-  };
+  const getAddressFromDomain = useCallback(
+    (name: string): Promise<string> => {
+      return web3?.eth.ens.getAddress(name) || new Promise((resolve) => resolve(name));
+    },
+    [web3],
+  );
 
   const isValidAddress = useCallback(
     (address: string | null) => {

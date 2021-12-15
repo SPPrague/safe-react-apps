@@ -1,7 +1,7 @@
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import { within } from '@testing-library/dom';
 import { useSafeAppsSDK } from '@gnosis.pm/safe-apps-react-sdk';
-import { mockTxsRequest, mockInitialBalances, renderWithProviders } from '../utils/test-helpers';
+import { mockTxsRequest, mockInitialBalances, renderWithProviders, mockChainInfo } from '../utils/test-helpers';
 import App from '../components/App';
 
 jest.mock('@gnosis.pm/safe-apps-react-sdk', () => {
@@ -15,18 +15,7 @@ jest.mock('@gnosis.pm/safe-apps-react-sdk', () => {
             items: mockInitialBalances,
           }),
         getChainInfo: () =>
-          Promise.resolve({
-            chainId: 4,
-            chainName: 'RINKEBY',
-            nativeCurrency: {
-              address: '0x0000000000000000000000000000000000000000',
-              decimals: 18,
-              logoUri: '/app/static/media/token_eth.bc98bd46.svg',
-              name: 'Ether',
-              symbol: 'ETH',
-            },
-            shortName: 'rin',
-          }),
+          Promise.resolve(mockChainInfo),
       },
       eth: {
         getGasPrice: () => Promise.resolve(0x3b9aca0b),
