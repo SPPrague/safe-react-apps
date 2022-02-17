@@ -9,7 +9,7 @@ import { ContractInterface } from '../../hooks/useServices/interfaceRepository';
 import {
   ADDRESS_FIELD_TYPE,
   CONTRACT_METHOD_FIELD_TYPE,
-  HEX_ENCODED_DATA_FIELD_TYPE,
+  CUSTOM_TRANSACTION_DATA_FIELD_TYPE,
   NATIVE_AMOUNT_FIELD_TYPE,
   SolidityFieldTypes,
 } from './fields/fields';
@@ -22,7 +22,7 @@ export const TO_ADDRESS_FIELD_NAME = 'toAddress';
 export const NATIVE_VALUE_FIELD_NAME = 'nativeAmount';
 export const CONTRACT_METHOD_INDEX_FIELD_NAME = 'contractMethodIndex';
 export const CONTRACT_VALUES_FIELD_NAME = 'contractFieldsValues';
-export const HEX_ENCODED_DATA_FIELD_NAME = 'hexEncodedData';
+export const CUSTOM_TRANSACTION_DATA_FIELD_NAME = 'customTransactionData';
 
 type SolidityFormPropsTypes = {
   id: string;
@@ -47,22 +47,23 @@ export type SolidityFormValuesTypes = {
   [NATIVE_VALUE_FIELD_NAME]: string;
   [CONTRACT_METHOD_INDEX_FIELD_NAME]: string;
   [CONTRACT_VALUES_FIELD_NAME]: Record<string, string>;
-  [HEX_ENCODED_DATA_FIELD_NAME]: string;
+  [CUSTOM_TRANSACTION_DATA_FIELD_NAME]: string;
 };
 
 export const parseFormToProposedTransaction = (
   values: SolidityFormValuesTypes,
   contract: ContractInterface | null,
 ): ProposedTransaction => {
+  console.log({ values });
   const contractMethodIndex = values[CONTRACT_METHOD_INDEX_FIELD_NAME];
   const toAddress = values[TO_ADDRESS_FIELD_NAME];
   const tokenValue = values[NATIVE_VALUE_FIELD_NAME];
   const contractFieldsValues = values[CONTRACT_VALUES_FIELD_NAME];
-  const hexEncodedData = values[HEX_ENCODED_DATA_FIELD_NAME];
+  const customTransactionData = values[CUSTOM_TRANSACTION_DATA_FIELD_NAME];
 
   const contractMethod = contract?.methods[Number(contractMethodIndex)];
 
-  const data = hexEncodedData || encodeToHexData(contractMethod, contractFieldsValues) || '0x';
+  const data = customTransactionData || encodeToHexData(contractMethod, contractFieldsValues) || '0x';
   const to = toChecksumAddress(toAddress);
   const value = toWei(tokenValue || '0');
 
@@ -72,7 +73,7 @@ export const parseFormToProposedTransaction = (
     description: {
       to,
       value,
-      hexEncodedData,
+      customTransactionData,
       contractMethod,
       contractFieldsValues,
       contractMethodIndex,
@@ -126,7 +127,7 @@ const SolidityForm = ({
 
     if (checked && contractMethod) {
       const encodeData = encodeToHexData(contractMethod, contractFieldsValues);
-      setValue(HEX_ENCODED_DATA_FIELD_NAME, encodeData || '');
+      setValue(CUSTOM_TRANSACTION_DATA_FIELD_TYPE, encodeData || '');
     }
     setShowHexEncodedData(checked);
   };
@@ -220,9 +221,9 @@ const SolidityForm = ({
         {showHexEncodedData && (
           <Field
             id="hex-encoded-data"
-            name={HEX_ENCODED_DATA_FIELD_NAME}
+            name={CUSTOM_TRANSACTION_DATA_FIELD_NAME}
             label="Data (Hex encoded)"
-            fieldType={HEX_ENCODED_DATA_FIELD_TYPE}
+            fieldType={CUSTOM_TRANSACTION_DATA_FIELD_TYPE}
             required
             fullWidth
             control={control}
