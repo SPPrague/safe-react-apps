@@ -1,13 +1,17 @@
 {
   "name": "wallet-connect",
-  "version": "1.3.0",
+  "version": "1.13.1",
   "private": true,
   "homepage": "./",
   "dependencies": {
     "@gnosis.pm/safe-react-components": "^0.9.7",
-    "@walletconnect/client": "^1.7.1",
-    "date-fns": "^2.28.0",
-    "jsqr": "^1.3.1"
+    "@safe-global/safe-apps-provider": "^0.18.0",
+    "@safe-global/safe-gateway-typescript-sdk": "^3.7.3",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/web3wallet": "^1.8.6",
+    "date-fns": "^2.30.0",
+    "ethers": "^5.7.2",
+    "jsqr": "^1.4.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -15,7 +19,7 @@
     "test": "react-app-rewired test --passWithNoTests",
     "deploy:s3": "bash ../../scripts/deploy_to_s3_bucket.sh",
     "deploy:pr": "bash ../../scripts/deploy_pr.sh",
-    "deploy:prod-hook": "bash ../../scripts/prepare-production-deployment.sh"
+    "deploy:prod-hook": "bash ../../scripts/prepare_production_deployment.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,5 +35,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@walletconnect/legacy-types": "^2.0.0",
+    "@walletconnect/types": "^2.9.0"
   }
 }

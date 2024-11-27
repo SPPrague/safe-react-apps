@@ -1,8 +1,13 @@
 {
-  "short_name": "WalletConnect",
   "name": "WalletConnect",
-  "description": "Allows your Gnosis Safe Multisig to connect to dapps via WalletConnect.",
+  "description": "Allows your Safe to connect to dapps via WalletConnect.",
   "iconPath": "wallet-connect.svg",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "icons": [
+    {
+      "src": "wallet-connect.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "safe_apps_permissions": ["camera"]
 }

@@ -3,7 +3,7 @@ name: Prepare environment
 description: Prepare environment in the CI runner and install dependencies
 
 inputs:
-  node_version:
+  node-version:
     description: Node.js version
     required: false
     default: '16'
@@ -21,9 +21,9 @@ runs:
   using: 'composite'
   steps:
     - name: Node.js setup
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.node_version }}
+        node-version: ${{ inputs.node-version }}
         cache: 'yarn'
         cache-dependency-path: '**/yarn.lock'
 
@@ -32,8 +32,10 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get -y install python3-pip python3-dev
-        pip install awscli --upgrade --user
-    - name: Project dependencies setup, node version ${{ matrix.node-version }}
+        python -m venv venv
+        source venv/bin/activate
+        pip install awscli --upgrade
+    - name: Project dependencies setup, node version ${{ inputs.node-version }}
       shell: bash
       run: yarn install --frozen-lockfile
 

@@ -1,28 +1,27 @@
-import { TextFieldInput } from '@gnosis.pm/safe-react-components';
-import { TextFieldInputProps } from '@gnosis.pm/safe-react-components/dist/inputs/TextFieldInput';
-import styled from 'styled-components';
-import { errorBaseStyles } from '../styles';
+import styled from 'styled-components'
+import TextFieldInput, { TextFieldInputProps } from './TextFieldInput'
 
 type TextContractFieldTypes = TextFieldInputProps & {
-  networkPrefix?: undefined | string;
-  getAddressFromDomain?: (name: string) => Promise<string>;
-};
+  networkPrefix?: undefined | string
+  getAddressFromDomain?: () => {}
+}
 
-const TextContractField = ({ getAddressFromDomain, networkPrefix, ...props }: TextContractFieldTypes) => {
-  return <StyledTextField {...props} hiddenLabel={false} />;
-};
+const TextContractField = ({
+  networkPrefix,
+  getAddressFromDomain,
+  ...props
+}: TextContractFieldTypes) => {
+  return <StyledTextField {...props} hiddenLabel={false} />
+}
 
-export default TextContractField;
+export default TextContractField
 
 const StyledTextField = styled(TextFieldInput)`
   && {
-    width: 520px;
-    margin-bottom: 10px;
-    ${errorBaseStyles}
     textarea {
       &.MuiInputBase-input {
         padding: 0;
       }
     }
   }
-`;
+`

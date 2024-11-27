@@ -1,12 +1,12 @@
 {
   "name": "ramp-network",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "private": true,
   "homepage": "./",
   "dependencies": {
     "@gnosis.pm/safe-react-components": "^0.9.7",
-    "@material-ui/core": "^4.12.3",
-    "@ramp-network/ramp-instant-sdk": "^3.0.0"
+    "@material-ui/core": "^4.12.4",
+    "@ramp-network/ramp-instant-sdk": "^4.0.4"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -14,7 +14,7 @@
     "test": "react-app-rewired test --passWithNoTests",
     "deploy:s3": "bash ../../scripts/deploy_to_s3_bucket.sh",
     "deploy:pr": "bash ../../scripts/deploy_pr.sh",
-    "deploy:prod-hook": "bash ../../scripts/prepare-production-deployment.sh"
+    "deploy:prod-hook": "bash ../../scripts/prepare_production_deployment.sh"
   },
   "eslintConfig": {
     "extends": [

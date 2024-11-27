@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-import { ReactElement } from 'react';
-import { AddressInput } from '@gnosis.pm/safe-react-components';
-import { errorBaseStyles } from '../styles';
+import { ReactElement } from 'react'
+import AddressInput from './AddressInput'
 
 const AddressContractField = ({
   id,
@@ -15,7 +13,7 @@ const AddressContractField = ({
   onBlur,
 }: any): ReactElement => {
   return (
-    <StyledAddressInput
+    <AddressInput
       id={id}
       name={name}
       label={label}
@@ -25,20 +23,13 @@ const AddressContractField = ({
       showNetworkPrefix={!!networkPrefix}
       networkPrefix={networkPrefix}
       hiddenLabel={false}
+      fullWidth
       error={error}
       getAddressFromDomain={getAddressFromDomain}
       onChangeAddress={onChange}
       showErrorsInTheLabel={false}
     />
-  );
-};
+  )
+}
 
-export default AddressContractField;
-
-const StyledAddressInput = styled(AddressInput)`
-  && {
-    width: 520px;
-    margin-bottom: 10px;
-    ${errorBaseStyles}
-  }
-`;
+export default AddressContractField

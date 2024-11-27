@@ -1,13 +1,14 @@
 {
   "name": "drain-safe",
-  "version": "1.0.0",
+  "version": "1.5.1",
   "private": true,
   "dependencies": {
-    "@gnosis.pm/safe-react-components": "^0.9.7",
-    "@material-ui/core": "^4.12.3",
+    "@gnosis.pm/safe-react-components": "^1.2.0",
+    "@material-ui/core": "^4.12.4",
     "@mui/x-data-grid": "4.0.2",
-    "bignumber.js": "^9.0.2",
-    "web3-eth-abi": "~1.7.0"
+    "@safe-global/safe-apps-provider": "^0.18.0",
+    "bignumber.js": "^9.1.1",
+    "web3-eth-abi": "~1.8.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -16,7 +17,7 @@
     "eject": "react-scripts eject",
     "deploy:s3": "bash ../../scripts/deploy_to_s3_bucket.sh",
     "deploy:pr": "bash ../../scripts/deploy_pr.sh",
-    "deploy:prod-hook": "bash ../../scripts/prepare-production-deployment.sh"
+    "deploy:prod-hook": "bash ../../scripts/prepare_production_deployment.sh"
   },
   "eslintConfig": {
     "extends": [

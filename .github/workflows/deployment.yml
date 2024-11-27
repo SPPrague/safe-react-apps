@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
@@ -42,22 +42,29 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-          REACT_APP_RPC_TOKEN: ${{ secrets.REACT_APP_RPC_TOKEN }}
+          REACT_APP_TENDERLY_ORG_NAME: ${{ secrets.REACT_APP_TENDERLY_ORG_NAME }}
+          REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL: ${{ secrets.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL }}
+          REACT_APP_TENDERLY_PROJECT_NAME: ${{ secrets.REACT_APP_TENDERLY_PROJECT_NAME }}
+          REACT_APP_MMI_BACKEND_BASE_URL: ${{ secrets.MMI_BACKEND_BASE_URL }}
+          REACT_APP_MMI_ENVIRONMENT: ${{ secrets.MMI_ENVIRONMENT }}
+          REACT_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.REACT_APP_WALLETCONNECT_PROJECT_ID_DEVSTAGING }}
+          REACT_APP_RAMP_APIKEY: ${{ secrets.REACT_APP_RAMP_APIKEY }}
 
       - name: 'PRaul: Comment PR with app URLs'
         if: success() && github.event.number
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Compound app](${{ env.REVIEW_FEATURE_URL }}/compound/)
-            * [WalletConnect app](${{ env.REVIEW_FEATURE_URL }}/wallet-connect/)
-            * [Tx Builder App](${{ env.REVIEW_FEATURE_URL }}/tx-builder/)
             * [Drain Account App](${{ env.REVIEW_FEATURE_URL }}/drain-safe/)
             * [RAMP Network App](${{ env.REVIEW_FEATURE_URL }}/ramp-network/)
+            * [Sign-In With Ethereum Delegate Manager App](${{ env.REVIEW_FEATURE_URL }}/siwe-delegate-manager/)
+            * [Tx Builder App](${{ env.REVIEW_FEATURE_URL }}/tx-builder/)
+            * [WalletConnect app](${{ env.REVIEW_FEATURE_URL }}/wallet-connect/)
+            * [MMI App](${{ env.REVIEW_FEATURE_URL }}/mmi/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review-react-hr.5afe.dev
 
   deploy:
     name: Deploy Dev/Staging
@@ -65,7 +72,7 @@ jobs:
     if: github.event_name != 'pull_request' && github.event_name != 'workflow_dispatch'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -82,6 +89,15 @@ jobs:
         run: |
           npx nx affected --target=test --parallel
           npx nx affected --target=build --parallel
+        env:
+          REACT_APP_TENDERLY_ORG_NAME: ${{ secrets.REACT_APP_TENDERLY_ORG_NAME }}
+          REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL: ${{ secrets.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL }}
+          REACT_APP_TENDERLY_PROJECT_NAME: ${{ secrets.REACT_APP_TENDERLY_PROJECT_NAME }}
+          REACT_APP_MMI_BACKEND_BASE_URL: ${{ secrets.MMI_BACKEND_BASE_URL }}
+          REACT_APP_MMI_ENVIRONMENT: ${{ secrets.MMI_ENVIRONMENT }}
+          REACT_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.REACT_APP_WALLETCONNECT_PROJECT_ID_DEVSTAGING }}
+          REACT_APP_RAMP_APIKEY: ${{ secrets.REACT_APP_RAMP_APIKEY }}
+
       # Script to deploy to the dev environment
       - name: 'Deploy to S3: Develop'
         if: github.ref == 'refs/heads/development'
@@ -102,18 +118,28 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: main
 
       - uses: ./.github/actions/setup-env
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: 'Deploy production'
         uses: ./.github/actions/release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          prod_deployment_hook_token: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
-          prod_deployment_hook_url: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
-          bucket_name: ${{ secrets.STAGING_BUCKET_NAME }}/releases
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          prod-deployment-hook-token: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
+          prod-deployment-hook-url: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
+          bucket-name: ${{ secrets.STAGING_BUCKET_NAME }}/releases
+          react-app-tenderly-org-name: ${{ secrets.REACT_APP_TENDERLY_ORG_NAME }}
+          react-app-tenderly-project-name: ${{ secrets.REACT_APP_TENDERLY_PROJECT_NAME }}
+          react-app-tenderly-simulate-endpoint-url: ${{ secrets.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL }}
+          react-app-mmi-backend-base-url: ${{ secrets.MMI_BACKEND_BASE_URL }}
+          react-app-mmi-environment: ${{ secrets.MMI_ENVIRONMENT }}
+          react-app-walletconnect-project-id: ${{ secrets.REACT_APP_WALLETCONNECT_PROJECT_ID }}
+          react-app-ramp-api: ${{ secrets.REACT_APP_RAMP_APIKEY }}
